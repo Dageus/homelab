@@ -1,0 +1,4 @@
+url: 10.150.0.5 # internal IP of NPM
+tunnel: <tunnel_id>
+credentials-file: /root/cloudflare/<tunnel_id>.json
+post-quantum: true

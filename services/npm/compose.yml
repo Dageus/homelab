@@ -1,0 +1,20 @@
+services:
+  npm:
+    container_name : npm
+    image: jc21/nginx-proxy-manager:latest
+    restart: unless-stopped
+    ports:
+      - '80:80' # Public HTTP Port
+      - '443:443' # Public HTTPS Port
+      - '81:81' # Admin Web Port
+      # - '21:21' # FTP
+    environment:
+      # - DB_SQLITE_FILE: "/data/database.sqlite"
+      - DISABLE_IPV6: 'true'
+      - TZ: 'Europe/Lisbon'
+    volumes:
+      - /root/npm/data:/data
+      - /root/npm/letsencrypt:/etc/letsencrypt
+      - /root/npm/snippets:/snippets:ro
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
