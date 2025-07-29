@@ -9,9 +9,9 @@ services:
       - '81:81' # Admin Web Port
       # - '21:21' # FTP
     environment:
-      # - DB_SQLITE_FILE: "/data/database.sqlite"
-      - DISABLE_IPV6: 'true'
-      - TZ: 'Europe/Lisbon'
+      # DB_SQLITE_FILE: "/data/database.sqlite"
+      DISABLE_IPV6: 'true'
+      TZ: 'Europe/Lisbon'
     volumes:
       - /root/npm/data:/data
       - /root/npm/letsencrypt:/etc/letsencrypt

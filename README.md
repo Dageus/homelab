@@ -1,5 +1,10 @@
 # Homelab Setup
 
+## Useful links
+
+Setuping up XPEnology (cracked version of Synology):
+- * [https://blog.nootch.net/post/poor-mans-synology-nas-on-proxmox/]
+
 ## Hardware
 ## OS Journey
 ## Proxmox Breakthrough

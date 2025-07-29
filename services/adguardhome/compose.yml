@@ -1,0 +1,11 @@
+services:
+  adguardhome:
+    image: adguard/adguardhome
+    container_name: adguardhome
+    restart: unless-stopped
+    network_mode: host  # Critical for DHCP/DNS
+    volumes:
+      - /etc/adguardhome/work:/opt/adguardhome/work
+      - /etc/adguardhome/conf:/opt/adguardhome/conf
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"

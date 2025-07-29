@@ -1,0 +1,25 @@
+all:
+  children:
+    test_servers:
+      hosts:
+        localhost:
+          ansible_connection: local
+    
+    proxmox:
+      hosts:
+        proxmox-host:
+          ansible_host: 192.168.1.1
+          ansible_user: root
+    
+    lxcs:
+      hosts:
+        nextcloud-lxc:
+          ansible_host: 192.168.1.207
+          ansible_user: root
+        immich-lxc:
+          ansible_host: 192.168.1.206
+          ansible_user: root
+    
+    docker_hosts:
+      children:
+        lxcs
