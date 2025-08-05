@@ -1,0 +1,10 @@
+---
+- name: Run specific playbook based on hostname variable
+  hosts: all
+  gather_facts: no
+  become: true
+
+  tasks:
+    - name: "Include playbook for {{ inventory_hostname }}"
+      ansible.builtin.include_tasks: "{{ playbook }}"
+      when: playbook is defined

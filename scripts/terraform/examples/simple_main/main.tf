@@ -8,13 +8,12 @@ terraform {
 }
 
 provider "proxmox" {
-  pm_api_url      = "https://192.168.1.75:8006/api2/json"
+  pm_api_url      = "https://<proxmox_host_ip>/api2/json"
   pm_tls_insecure = true
 }
 
 
 # Defining a container, in this case, Tailscale
-
 resource "proxmox_lxc" "tailscale" {
   target_node = "pve1"
   hostname    = "tailscale"

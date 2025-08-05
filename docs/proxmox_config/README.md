@@ -176,9 +176,21 @@ To update the proxmox host:
 
 `apt update && apt -y dist-upgrade`
 
+#### Add No-Subscription to sources (for < Proxmox 7)
+
+Go to `etc/apt/sources.list.d/proxmox.sources` and add:
+
+```txt
+Types: deb
+URIs: http://download.proxmox.com/debian/pve
+Suites: trixie
+Components: pve-no-subscription
+Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
+```
+
 ### Script to update all LXC's and then the host
 
-```
+```bash
 #!/bin/bash
 # update all containers
 
