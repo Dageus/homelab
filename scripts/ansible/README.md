@@ -163,6 +163,8 @@ roles_path = roles
 
 ## Setting up variables in roles
 
+> Always read up on naming conventions based on the language's documentation [here](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_variables.html#creating-valid-variable-names)
+
 inside `roles/proxmox_lxc/defaults/main.yml`, populate the file:
 
 ```yml
@@ -225,3 +227,34 @@ proxmox_lxc_privileged: false             # For Docker/LXC nesting
 3. Create VM (with cloud-init integration)
 
 Try to ping the VM/LXC to check for errors
+
+---
+
+## Terraform vs. Ansible
+
+This is where I had a massive inner debate, since I sat for a full week reading up on Ansible and Terraform to see which one fit my needs better. If I wanted full control to do whatever I wanted when provisioning the LXC's, Ansible would be the way to go. Since Ansible isn't built for only one job, you can virtually do anything you want with it.
+But since what I wanted to do was simple (create a central LXC and clone it for a sevice) Terraform did the job perfectly.
+
+But this left me with another issue: connecting Terraform to Ansible. Another rabbit hole was digged. If you want to do it automatically, you need to find a way to generate the `hosts.yml` file automatically. Thankfully, Terraform supports [template files](https://developer.hashicorp.com/terraform/language/functions/templatefile), using Jinja to generate the text. To read up on this, see the `terraform/README.md`
+
+### Deploying containers
+
+There were 2 ways to go about this:
+
+- Using Ansible's built-in tools to deploy containers, like `docker-image` and `docker-container`. And then migrating all my docker compose files to this format, or
+
+- Using Ansible as a bridge, it would copy the compose files to the guest LXC and deploy using the pre-existing docker compose
+
+Since I'd like to keep my roles separate, I went with the second approach. Therefore, the steps were simple.
+
+After spinning up an LXC:
+
+1. Update the system (always good to do as a safeguard)
+
+2. Create necessary directories (if necessary)
+
+3. Copy the `docker-compose.yaml` file to the client LXC
+
+4. Run the container
+
+But in the middle of this train of thought, I noticed that it's not good practice to have this repetitive code of "Updating the system" in every playbook I do, since it's kind of redundact. So I moved this snippet of code to a separate playbook that gets run before the actual playbook to deploy the docker container. That way, the `adguard.yml` playbook, for example, only needs to worry about installing the adguard container.

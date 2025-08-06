@@ -279,6 +279,13 @@ this allowed me to have all LXC's built from the same template (since all servic
 
 this can be seen in `examples/lxc_host_mapping`
 
+### Generating `hosts.ini` file for Ansible
+
+
+#### Generating the hosts file
+
+Firstly, create a file called `hosts.tmpl` or whatever other name might help you identify this file as a template. Then, create the template 
+
 #### Challenges
 
 Suffice to say that the hardest part of this was finding a way to generate an Ansible inventory from the terraform outputs. I tried creating a python script that migrated the output from `outputs.tf` to a config file for Ansible to read; i tried using command line, mixing `jq` to parse the values from the output to YAML; but in the end, I just decided to use Terraform only code, through the use of [template files](https://developer.hashicorp.com/terraform/language/functions/templatefile). This seemed more complex at face-value, but turned out to be easier to manage.

@@ -1,0 +1,21 @@
+---
+- name: Perform base system configuration
+  hosts: all # Run this on all newly created hosts
+  become: yes
+
+  tasks:
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: yes
+      tags:
+        - update
+
+    - name: Upgrade all installed packages
+      ansible.builtin.apt:
+        upgrade: 'dist'
+      tags:
+        - update
+
+    - name: Set timezone to Europe/Lisbon
+      community.general.timezone:
+        name: Europe/Lisbon

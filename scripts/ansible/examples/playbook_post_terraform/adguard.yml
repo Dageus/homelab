@@ -1,51 +1,22 @@
 ---
-- name: Setup AdGuard Home
-  hosts: adguard # Note that you can also specify the host here
-  tasks:
-    - name: Install necessary packages
-      ansible.builtin.apt:
-        name:
-          - curl
-          - docker.io
-          - docker-compose
-        state: present
-    
-    - name: Deploy AdGuard Home container
-      ansible.builtin.docker_container:
-        name: adguard
-        image: adguard/adguardhome
-        state: started
-
-# BUG: example code
-
----
-- name: Deploy AdGuard Home service
+- name: Deploy AdGuard Home container
   hosts: adguard
   become: yes # become sudo
 
   tasks:
-    - name: Create service directory
-      ansible.builtin.file:
-        path: /opt/adguard
+    - name: Create adguard directory
+      file:
+        path: "{{ adguard_dir }}"
         state: directory
         mode: '0755'
 
-    - name: Copy docker-compose.yml file
-      ansible.builtin.copy:
-        src: files/docker-compose-adguard.yml
-        dest: /opt/adguard/docker-compose.yml
+    - name: Copy Docker Compose file
+      copy:
+        src: docker-compose.yaml
+        dest: "{{ adguard_dir }}/docker-compose.yaml"
         mode: '0644'
 
-    - name: Deploy the AdGuard Home service with Docker Compose
-      community.docker.docker_compose_v2:
-        project_src: /opt/adguard
+    - name: Start Adguard containers
+      docker_compose:
+        project_src: "{{ adguard_dir }}"
         state: present
-        
-    - name: Verify service is running
-      ansible.builtin.command: docker-compose -f /opt/adguard/docker-compose.yml ps
-      register: compose_ps_output
-      changed_when: false
-      
-    - name: Display service status
-      ansible.builtin.debug:
-        var: compose_ps_output.stdout_lines

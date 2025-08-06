@@ -1,0 +1,4 @@
+- Create a **`docs/overview.md`** explaining:  
+  - Your homelab’s purpose (e.g., "Self-hosted services with minimal hardware").  
+  - Hardware specs (CPU/RAM/storage).  
+  - Network topology (diagram using [Mermaid.js](https://mermaid.js.org/)).  
