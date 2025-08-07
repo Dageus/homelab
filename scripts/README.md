@@ -22,3 +22,5 @@
 - **Terraform**: Provision LXC containers and VMs in Proxmox
 - **Ansible**: Configure services (Tailscale, Cloudflared, Vaultwarden)
 - **GitOps**: Version-controlled infrastructure
+
+
