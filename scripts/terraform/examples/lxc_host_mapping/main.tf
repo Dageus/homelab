@@ -1,9 +1,3 @@
-provider "proxmox" {
-  pm_api_url          = "https://your-proxmox-host:8006/api2/json"
-  pm_api_token_id     = "terraform-user@pve!token-name"
-  pm_api_token_secret = "your-api-token-secret"
-}
-
 resource "proxmox_lxc" "template" {
   hostname    = var.template.key
   target_node = var.proxmox_node

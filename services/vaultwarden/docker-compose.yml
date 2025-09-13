@@ -1,0 +1,14 @@
+services:
+  vaultwarden:
+    container_name: vaultwarden
+    image: vaultwarden/server:latest
+    restart: unless-stopped
+    environment:
+      DOMAIN: "https://vw.domain.tld"
+    volumes:
+      - ./vw-data/:/data/
+    ports:
+      - '8000:80'
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+

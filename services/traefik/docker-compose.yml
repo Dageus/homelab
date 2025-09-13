@@ -1,0 +1,12 @@
+services:
+  traefik:
+    image: traefik:v3
+    restart: unless-stopped
+    volumes: 
+      - ./traefik.yml:/etc/traefik/traefik.yml
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      - "80:80"
+      - "8080:8080"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"

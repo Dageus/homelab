@@ -6,6 +6,8 @@ Here follows a list of the tweaks I made to my Proxmox to enhance performance an
 
 ## Scripts
 
+Just a small disclaimer, when it comes to scripts for Proxmox, 9 times out of 10 the [Community Scripts](https://community-scripts.github.io/ProxmoxVE/) are going to be your best friend. I just tried to do it on my own for the experience.
+
 ### How to add internal network interface with NAT
 
 It helps freeing up physical networks ip range

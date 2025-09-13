@@ -1,10 +1,3 @@
-- Create a **`docs/overview.md`** explaining:  
-  - Your homelab’s purpose (e.g., "Self-hosted services with minimal hardware").  
-  - Hardware specs (CPU/RAM/storage).  
-  - Network topology (diagram using [Mermaid.js](https://mermaid.js.org/)).  
-
----
-
 ## Useful links
 
 Setuping up XPEnology (cracked version of Synology):
@@ -12,7 +5,7 @@ Setuping up XPEnology (cracked version of Synology):
 
 This started as a side project since one of my family members wanted to sell their computer, and I offered to keep it for free if I made it useful.
 
-This then led me down a rabbit hole where I found out I actually have a passion for Systems Administration and had fun like I've never had before.
+This then led me down a rabbit hole where I found out I actually have a passion for Systems Administration and DevOps.
 
 ## Computer specs
 

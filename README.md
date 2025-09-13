@@ -1,3 +1,4 @@
+![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Dageus/homelab)
 ![Proxmox](https://img.shields.io/badge/proxmox-proxmox?style=for-the-badge&logo=proxmox&logoColor=%23E57000&labelColor=%232b2a33&color=%232b2a33)
 ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)
 ![Ansible](https://img.shields.io/badge/ansible-%231A1918.svg?style=for-the-badge&logo=ansible&logoColor=white)
@@ -15,4 +16,4 @@
 
 ## Disclaimer
 
-I am not, in any way, a professional DevOps Engineer; this was a project done for fun and to get me into the DevOps space, so take all my advice with a grain of salt
+I am not, in any way, a professional DevOps Engineer; this was a project done for fun and to get me into the DevOps space, so take all my advice with a grain of salt.
