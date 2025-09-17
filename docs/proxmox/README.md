@@ -4,6 +4,10 @@ Proxmox is extremely good as a baseline for a server, but the amount of logs it 
 
 Here follows a list of the tweaks I made to my Proxmox to enhance performance and make it last longer
 
+#### Sources
+
+[https://forum.proxmox.com/threads/how-does-keyctl-works-in-virtual-environments.116414/](https://forum.proxmox.com/threads/how-does-keyctl-works-in-virtual-environments.116414/)
+
 ## Scripts
 
 Just a small disclaimer, when it comes to scripts for Proxmox, 9 times out of 10 the [Community Scripts](https://community-scripts.github.io/ProxmoxVE/) are going to be your best friend. I just tried to do it on my own for the experience.
@@ -261,7 +265,7 @@ say "no" to high availability since that will increase disk writes and a regular
 
 Since we'll be using proxmox as a homelab setup, we don't need a lot of snapshots and provisioning, so we can safely remove 'local-lvm', improving our disk space and having just one central directory.
 
-### Creating your first template
+### Creating your first template (unprivileged)
 
 It's very useful to have an easy template if all your services require the same base setup (in my case, a Docker-ready container where I just need to deploy the service). This is a very strong feature of Proxmox.
 
@@ -293,7 +297,7 @@ systemctl status ifupdown-wait-online.service
 systemctl disable ifupdown-wait-online.service
 ```
 
-LXC containers don't generally have sudo; if you want to shh with root, you need to change `/etc/ssh/sshd_config` and change "PermitRootLogin" to Yes
+LXC containers don't generally have sudo; if you want to ssh with root, you need to change `/etc/ssh/sshd_config` and change "PermitRootLogin" to Yes
 
 Lastly, run `dpkg-reconfigure locales` and choose your prefered locale.
 
@@ -302,6 +306,14 @@ To clean up some extra space that might've come with the installed packages, run
 ```bash
 apt clean -q && apt update -q && apt dist-upgrade -y && apt autoremove -y
 ```
+
+In the options of the LXC, you need to enable the following options:
+
+- `keyctl`: transforms the root actions inside a container to non-root actions on the host machine, making the container "believe" it's root
+
+- `nesting`: allows hardware flags to be passed over virtualization (for docker uses)
+
+- `FUSE`: short for Filesystem for Userspace, it's good for Docker-in-Docker setups for when you need to redirect filesystem calls to a userspace
 
 To convert this into a template, right click the newly created container and click "Convert to template"
 

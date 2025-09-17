@@ -1,6 +1,6 @@
 resource "proxmox_lxc" "template" {
   hostname    = var.template.key
-  target_node = var.proxmox_node
+  target_node = var.proxmox_host
   vmid        = var.template.vmid
 
   ostemplate = "local:vztmpl/${var.template_name}"
@@ -16,17 +16,15 @@ resource "proxmox_lxc" "template" {
 
   # Specs of the machine
   cores  = 2
-  memory = 2048
-  size   = "8G"
+  memory = 256
+  swap   = 256
 
-  tags = {
-    Environment = "Testing"
-    Owner       = "Dageus"
-    Use         = "Template"
-    Deploy      = "false"
+  rootfs {
+    storage = "local"
+    size    = "16G"
   }
 
-  lifecycle = {
+  lifecycle {
     ignore_changes = [tags]
   }
 }
@@ -38,7 +36,7 @@ resource "proxmox_lxc" "container" {
 
   # Use the key as the hostname
   hostname    = each.key
-  target_node = var.proxmox_node
+  target_node = var.proxmox_host
   vmid        = each.value.vmid
 
   ssh_public_keys = file(var.ssh_public_key)
@@ -62,16 +60,6 @@ resource "proxmox_lxc" "container" {
     bridge = "vmbr1"
     ip     = "10.150.0.${each.value.vmid}/24"
     gw     = "10.150.0.1"
-  }
-
-  tags = {
-    Environment = "Testing"
-    Owner       = "Dageus"
-    Deploy      = "true"
-  }
-
-  lifecycle = {
-    ignore_changes = [tags]
   }
 }
 

@@ -1,0 +1,28 @@
+services:
+  gitlab-runner:
+    container_name: gitlab-runner
+    image: gitlab/gitlab-runner:latest
+    restart: always
+    volumes:
+      - ./config:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - SERVER_URL=${CI_SERVER_URL}
+      - TOKEN=${REGISTRATION_TOKEN}
+      - RUNNER_NAME=${RUNNER_NAME}
+    entrypoint: >
+      sh -c '
+        if [ ! -f /etc/gitlab-runner/config.toml ]; then
+          gitlab-runner register \
+          --non-interactive \
+          --url "${SERVER_URL}" \
+          --token "${TOKEN}" \
+          --name=${RUNNER_NAME} \
+          --executor "docker" \
+          --docker-image "alpine:latest" \
+          --docker-privileged="true"
+        fi;
+        exec gitlab-runner run
+      '
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"

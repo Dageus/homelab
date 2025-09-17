@@ -43,16 +43,24 @@ if you're running this inside a privileged container, be sure to use `sudo`
 ### Create a role in Proxmox
 
 ```bash
-pveum role add terraform-role -privs "VM.Allocate VM.Clone VM.Config.CDROM VM.Config.CPU VM.Config.Cloudinit VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Monitor VM.Audit VM.PowerMgmt Datastore.AllocateSpace Datastore.Audit"
+pveum role add TerraformProv -privs "Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
 ```
 
 creating the user:
 
 ```bash
-pveum user add terraform@pve
-pveum aclmod / -user terraform@pve -role terraform-role
+pveum user add terraform-prov@pve --password <password>
+pveum aclmod / -user terraform-prov@pve -role TerraformProv
 pveum user token add terraform@pve terraform-token --privsep=0
 ```
+
+If you ever need to change the permissions of the role, just run:
+
+```bash
+pveum role modify TerraformProv -privs "Datastore.AllocateSpace Datastore.AllocateTemplate Datastore.Audit Pool.Allocate Sys.Audit Sys.Console Sys.Modify VM.Allocate VM.Audit VM.Clone VM.Config.CDROM VM.Config.Cloudinit VM.Config.CPU VM.Config.Disk VM.Config.HWType VM.Config.Memory VM.Config.Network VM.Config.Options VM.Migrate VM.Monitor VM.PowerMgmt SDN.Use"
+```
+
+Remember to turn off the "Privilege Separation" in the Datacenter -> Permissions -> API Tokens.
 
 I would advice you to save this in a file where they can be easily loaded, either a `.env` file or a custom file like `terraform.tfvars` with the format:
 
@@ -228,6 +236,18 @@ resource “proxmox_lxc” “test_container” {
     hostname = var.container_name
 }
 ```
+
+### Cloning an LXC container
+
+This is done through the `clone` variable. In my case, it only worked if I used the **hostname** of the template, NOT the VMID.
+
+TODOTODTODOTODTODOTODTODOTODOTOT
+TODOTODTODOTODTODOTODTODOTODOTOT
+TODOTODTODOTODTODOTODTODOTODOTOT
+TODOTODTODOTODTODOTODTODOTODOTOT
+TODOTODTODOTODTODOTODTODOTODOTOT
+TODOTODTODOTODTODOTODTODOTODOTOT
+TODOTODTODOTODTODOTODTODOTODOTOT
 
 ## Deploying our first container
 

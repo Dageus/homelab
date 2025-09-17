@@ -13,4 +13,4 @@ services:
       - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN} # place this variable inside a .env
       - TUNNEL_POST_QUANTUM=${CLOUDFLARE_TUNNEL_POST_QUANTUM} # place this variable inside a .env
     labels:
-      - com.centurylinklabs.watchtower.enable=true
+      - "com.centurylinklabs.watchtower.enable=true"
