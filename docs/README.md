@@ -1,3 +1,5 @@
+# Docs and Guides
+
 ## Useful links
 
 Setuping up XPEnology (cracked version of Synology):
@@ -11,7 +13,7 @@ This then led me down a rabbit hole where I found out I actually have a passion 
 
 The computer has some measly specs, but that was more than enough to have fun with deploying services.
 
----
+### Hardware
 
 Model: Samsung 900X3C/900X3D/900X3E/900X4C/900X4D
 
@@ -27,7 +29,6 @@ I had already set up several Linux systems, on my home computer I have Arch (pre
 
 So, by instinct, I installed Arch on the future server as well, only to soon find out it wasn't a very good idea.
 
-
 After seeing how hard it is to get an Arch Linux setup to work as a server, I migrated to Debian, which is very famous for being lightweight and reliable.
 
 I tried to deploy some docker containers, like an SMB filesystem to let me access photos (my Google Photos storage was full, classic story), but then found out about a very interesting OS: proxmox.
@@ -38,11 +39,17 @@ Then, after watching a ton of Youtube videos regarding initial setup's for proxm
 
 I wanted to document this journey for anyone who wants to start messing with proxmox (I know a lot of guides are out there, but I hope to bring more diversity to the already existing solutions).
 
-### Key Takeaways  
-- **Arch Linux ≠ Server OS**: Stability > bleeding-edge for homelabs.  
-- **Proxmox is a Game-Changer**: Virtualization simplified my Docker/LXC workflows.  
-- "YouTube University" is valid – but cross-reference docs!  
 
-## Next Steps  
-- Deep-dive into my Cloudflare Tunnel setup.  
-- Kubernetes on a shoestring budget? Challenge accepted.  
+## Current Architecture
+
+#### Inspiration
+
+[https://www.reddit.com/r/homelab/comments/nf40iy/some_major_homelab_updates_have_come_along_so_its/#lightbox](https://www.reddit.com/r/homelab/comments/nf40iy/some_major_homelab_updates_have_come_along_so_its/#lightbox)
+
+![Architecture](./assets/network.svg)
+
+## Current Setup
+
+My current setup is [Proxmox 9.x](https://www.proxmox.com/en/about/company-details/press-releases/proxmox-virtual-environment-9-0), currently being replicated using IaC, see my [guide](../scripts/README.md) about getting started on replicating your Proxmox setup and using IaC tools.
+
+If you want to learn more about how I got the most out of this 8 year old PC (not without it's drawbacks), read my [guide](./proxmox/README.md) on setting up and optimizing proxmox.

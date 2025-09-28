@@ -30,7 +30,7 @@ Lastly, just give it a password and click "Next".
 
 The next page will prompt you to choose the template you want; I generally pick Debian 12 because it's lightweight and very stable.
 
-Now you'll need to set up the virtual disks in your container. If you want loosely coupled services, you might deploy 1-2 services per container. If this is the case, you don't need a lot of storage or memory in the container. I mostly give it 4-8 GiB, but that depends on how much you're willing to provide to this container.
+Now you'll need to set up the virtual disks in your container. If you want loosely coupled services, you might deploy 1-2 services per container. If this is the case, you don't need a lot of storage or memory in the container. I mostly give it 4-8 GiB of disk storage, but that depends on how much you're willing to provide to this container.
 
 If you removed 'local-lvm', you'll just have one disk, pick that one and click next.
 
@@ -64,11 +64,11 @@ By default almost all automatic updates are turned off. Open `/etc/apt/apt.conf.
 "origin=Debian,codename=${distro_codename}-security,label=Debian-Security";
 ```
 
-if you also want to include the Proxmox repository in the updates, add this line:
+If you also want to include the Proxmox repository in the updates, add this line:
 
 `"origin=Proxmox,codename=${distro_codename},label=Proxmox Debian Repository";`
 
-if you have docker, it goes like this:
+If you have docker, it goes like this:
 
 `"origin=Docker,codename=${distro_codename},label=Docker";`
 
@@ -86,7 +86,7 @@ To turn this on, add this line:
 
 ### Enable automatic updates
 
-to turn this feature on, we need to tweak `/etc/apt/apt.conf.d/20auto-upgrades`.
+To turn this feature on, we need to tweak `/etc/apt/apt.conf.d/20auto-upgrades`.
 
 This can be done by running `dpkg-reconfigure`:
 
@@ -94,17 +94,19 @@ This can be done by running `dpkg-reconfigure`:
 dpkg-reconfigure --priority=low unattended-upgrades
 ```
 
-to check the status of the service (to see if it's running), run:
+To check the status of the service (to see if it's running), run:
 
 ```sh
 systemctl status unattended-upgrades.service
 ```
 
-if the system is not enabled, run:
+If the system is not enabled, run:
 
 ```sh
 systemctl enable unattended-upgrades
 systemctl start unattended-upgrades
 ```
 
-the logs can be seen in `/var/log/unattended-upgrades/`
+The logs can be seen in `/var/log/unattended-upgrades/`
+
+And this is generally the configurations you need for your LXC containers, of course there are a lot more options, but for starters this is good enough.

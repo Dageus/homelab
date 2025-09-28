@@ -1,6 +1,6 @@
 # Proxmox Configuration
 
-Proxmox is extremely good as a baseline for a server, but the amount of logs it saves and how much memory and disk space it uses, given my setup, it could hinder the performance of the services I wanted due to how much CPU and disk usage Proxmox would just by idling.
+Proxmox is extremely good as a baseline for a server, but the amount of logs it saves and how much memory and disk space it uses, given my setup, could hinder the performance of the services I wanted due to how much CPU and disk usage Proxmox would use just by idling.
 
 Here follows a list of the tweaks I made to my Proxmox to enhance performance and make it last longer
 
@@ -10,11 +10,9 @@ Here follows a list of the tweaks I made to my Proxmox to enhance performance an
 
 ## Scripts
 
-Just a small disclaimer, when it comes to scripts for Proxmox, 9 times out of 10 the [Community Scripts](https://community-scripts.github.io/ProxmoxVE/) are going to be your best friend. I just tried to do it on my own for the experience.
-
 ### How to add internal network interface with NAT
 
-It helps freeing up physical networks ip range
+It helps freeing up physical networks ip range by making containers use they own IP range
 
 Edit the `/etc/network/interfaces` file on the Proxmox host and add this after vmbr0 section:
 
@@ -41,10 +39,10 @@ When creating a CT or VM, the first eth card should be pointing to vmbr1 and hav
 
 ### Reduce swappiness
 
-#### sources
+#### Sources
 
-* [https://askubuntu.com/questions/157793/why-is-swap-being-used-even-though-i-have-plenty-of-free-ram]
-* [https://askubuntu.com/questions/103915/how-do-i-configure-swappiness/103916#103916]
+[https://askubuntu.com/questions/157793/why-is-swap-being-used-even-though-i-have-plenty-of-free-ram](https://askubuntu.com/questions/157793/why-is-swap-being-used-even-though-i-have-plenty-of-free-ram)
+[https://askubuntu.com/questions/103915/how-do-i-configure-swappiness/103916#103916](https://askubuntu.com/questions/103915/how-do-i-configure-swappiness/103916#103916)
 
 #### Context
 
@@ -60,41 +58,43 @@ The default setting in Ubuntu is swappiness = 60. A value of swappiness = 10 is 
 
 #### Commands
 
-check swappiness value:
+To check the swappiness value run:
 
 ```bash
 cat /proc/sys/vm/swappiness
 ```
 
-to change the swappiness value a temporary change (lost on reboot) with a swappiness of 10 can be made with
+To change the swappiness value a temporary change (lost on reboot) with a swappiness of 10 can be made with:
 
 ```bash
 sysctl vm.swappiness=10
 ```
 
-to make the change permanent, edit the configuration file with your prefered editor:
+To make the change permanent, edit the configuration file with your prefered editor:
 
 ```bash
 vim /etc/sysctl.conf
 ```
 
-search for 'vm.swappiness' and change its value as desired. if vm.swappiness does not exist, add it at the end of the file like so:
+Search for 'vm.swappiness' and change its value as desired. if vm.swappiness does not exist, add it at the end of the file like so:
 
 ```ini
 vm.swappiness=10
 ```
 
-run `sysctl --load=/etc/sysctl.conf` after editing the file to apply the changes
+Run `sysctl --load=/etc/sysctl.conf` after editing the file to apply the changes
 
 ### Disable HA services
 
-#### sources
+#### Sources
+
+[https://pve.proxmox.com/wiki/High_Availability](https://pve.proxmox.com/wiki/High_Availability)
 
 [https://www.reddit.com/r/Proxmox/comments/129dxw7/proxmox_high_disk_writes](https://www.reddit.com/r/Proxmox/comments/129dxw7/proxmox_high_disk_writes)
 
-#### commands
+#### Commands
 
-run these commands to limit the amount of writes:
+Run these commands to limit the amount of writes:
 
 ```bash
 systemctl disable --now pve-ha-crm.service
@@ -102,9 +102,13 @@ systemctl disable --now pve-ha-lrm.service
 systemctl disable --now corosync.service
 ```
 
-those settings disable the high availability and clustering features (who are write intensive)
+Those settings disable the High Availability and clustering features (which are write intensive). If you have hardware that supports it (including SSD's with endurance) you may keep these settings.
 
-### Enable SSD trim
+### Enable SSD Trim
+
+SSD Trim is a command that tell the SSD to use its "garbage collector" to erase memory blocks that are no long in use by the host OS, freeing up space (although it can weigh down the SSD's lifetime).
+
+To enable this service, run:
 
 ```bash
 systemctl start fstrim.service
@@ -112,6 +116,12 @@ systemctl status fstrim.service
 ```
 
 ### Extend the local lvm volume after first install
+
+By default, Proxmox mounts several volumes as a sort of "separation of concerns". Each volume to certain storage concerns:
+
+- "local-lvm" only stores VM's/LXC's.
+
+- "local" only stores Backups/ISO's/Snippets/Templates as well as the root filesystem
 
 ```bash
 pvs
@@ -121,86 +131,92 @@ lsblk
 lvresize -l +100%FREE pve/data
 ```
 
+This command will basically extend Proxmox's storage to occupy all free space left.
+
 ### Change CPU governor to conservative
 
 This will increase powersaving features and improve dynamic CPU frequence
 
-#### sources
+#### Sources
 
 [https://forum.proxmox.com/threads/fix-always-high-cpu-frequency-in-proxmox-host.84271/](https://forum.proxmox.com/threads/fix-always-high-cpu-frequency-in-proxmox-host.84270/)
 
+First of all, install the packages needed:
 
 ```bash
 apt-get update
 apt-get install acpi-support acpid acpi
 ```
 
-Edit the file `/etc/default/grub` and add
+Then, edit the file `/etc/default/grub` and add:
 
 ```ini
 intel_pstate=disable to GRUB_CMDLINE_LINUX_DEFAULT
 GRUB_CMDLINE_LINUX_DEFAULT="intel_pstate=disable"
 ```
 
-then run:
+Lastly, run:
 
 ```bash
 update-grub
 reboot
 ```
 
+This will make your changes effective.
+
 After reboot run the command below to set CPU governor as conservative:
-(this command will set all CPU to conservative mode, most of the CPU available governor using acpi will be)
-(conservative ondemand userspace powersave performance schedutil)
-(you can contrab -e and put below the command with @reboot)
 
 ```bash
 echo "conservative" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
-You can use `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors` to see which governors are available
+You can use `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors` to see which governors are available.
 
-this is how it should look on crontab:
+This is how it should look on crontab:
 
 ```bash
 @reboot echo "conservative | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
-install i7z using apt so you can check real time CPU frequency and temperatures
+Install i7z using apt so you can check real time CPU frequency and temperatures.
 
-### NOTE:
+### NOTE
 
-When installing Proxmox, I chose ext4 instead of zfs or btrfs, otherwise I could suffer from write amplification, which can kill SSD's faster
+When installing Proxmox, I chose ext4 instead of zfs or btrfs, otherwise I could suffer from write amplification, which can kill SSD's faster.
+
+If you want to know more about this, read about [ZFS](https://pve.proxmox.com/wiki/ZFS_on_Linux) and it's Copy-on-Write mechanism.
 
 ### Installing the community repo for proxmox
 
-#### sources
+#### Sources
 
 [https://medium.com/@ronyhanna/proxmox-ve-post-installation-and-configuration-part-02-5f9c948371bb#1679](https://medium.com/@ronyhanna/proxmox-ve-post-installation-and-configuration-part-02-5f9c948371bb#1679)
 
 #### Commands
 
-* Select the node in the GUI
+Log in to your ProxmoxVE dashboard (usually available through port 8006):
 
-* Expand Updates
+- Select the node in the GUI
 
-* Select repositories
+- Expand Updates
 
-* Select Add from the GUI
+- Select repositories
 
-* Select "No-Subscription Repository"
+- Select Add from the GUI
 
-* Select Add
+- Select "No-Subscription Repository"
 
-Now we have to disable the "enterprise repository" and "pve-enterprise repository"
+- Select Add
 
-* Select on the enterprise repository
+Now we have to disable the "enterprise repository" and "pve-enterprise repository":
 
-* Hit Disable
+- Select on the enterprise repository
 
-* Select on the pve-enterprise repository
+- Hit Disable
 
-* Hit Disable
+- Select on the pve-enterprise repository
+
+- Hit Disable
 
 To update the proxmox host:
 
@@ -224,6 +240,8 @@ Signed-By: /usr/share/keyrings/proxmox-archive-keyring.gpg
 ```
 
 ### Script to update all LXC's and then the host
+
+This is a neat script I made for myself to update all LXC's and the host, in one script so you don't have to remember it all:
 
 ```bash
 #!/bin/bash
@@ -252,83 +270,40 @@ pveupdate && pveupgrade
 apt clean && apt update && apt dist-upgrade -y && apt autoremove -y
 ```
 
+Then, if you don't want to worry about it at all, you can set a [cronjob](https://cronitor.io/guides/cron-jobs) for it:
+
+```bash
+# TODO: search online how to add a weekly cronjob for this script
+```
+
 ### Community Post-Install Script
 
-download the script from
+Download the script from:
 
-* [https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install]
+[https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install](https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install)
 
-say "no" to installing the ceph repository and pvetest repository, since it is extremely unstable.
-say "no" to high availability since that will increase disk writes and a regular PC won't benefit from it.
+Say `No` to installing the ceph repository and pvetest repository, since it is extremely unstable.
+
+Say `No` to high availability since that will increase disk writes and a regular PC won't benefit from it.
 
 ### Removing 'local-lvm'
 
+#### Sources
+
+[https://forum.proxmox.com/threads/remove-local-lvm-and-increase-local.142164/](https://forum.proxmox.com/threads/remove-local-lvm-and-increase-local.142164/)
+
 Since we'll be using proxmox as a homelab setup, we don't need a lot of snapshots and provisioning, so we can safely remove 'local-lvm', improving our disk space and having just one central directory.
 
-### Creating your first template (unprivileged)
+## Next Steps
 
-It's very useful to have an easy template if all your services require the same base setup (in my case, a Docker-ready container where I just need to deploy the service). This is a very strong feature of Proxmox.
+Now that the initial Proxmox configuration is done, you can move on to:
 
-Follow the steps denoted in `creating_debian_lxc_container.md`.
+- Creating your first [LXC container](./lxc_container.md)
 
-In my case, since everything will be running on top of docker, we'll need to install it.
+- Creating your first [Template](./lxc_template.md)
 
-```bash
-apt install lsb-release gnupg2
-apt-transport-https ca-certificates curl
-software-properties-common -y
-curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/trusted.gpg.d/debian.gpg
+- [Mounting folders](./mounting_folders_in_lxc.md) to your LXC container
 
-add-apt-repository "deb [arch=$(dpkg --print-architecture)] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+- Upgrading your Proxmox Security and Extra features
 
-apt update
-apt install docker-ce docker-ce-cli containerd.io docker-compose-plugin
-
-systemctl start docker && systemctl enable docker
-
-systemctl status docker
-docker version
-```
-
-There also a service that was disabled to avoid 5-minute delay for the services to start: `ifupdown-wait-online.service`
-
-```bash
-systemctl status ifupdown-wait-online.service
-systemctl disable ifupdown-wait-online.service
-```
-
-LXC containers don't generally have sudo; if you want to ssh with root, you need to change `/etc/ssh/sshd_config` and change "PermitRootLogin" to Yes
-
-Lastly, run `dpkg-reconfigure locales` and choose your prefered locale.
-
-To clean up some extra space that might've come with the installed packages, run:
-
-```bash
-apt clean -q && apt update -q && apt dist-upgrade -y && apt autoremove -y
-```
-
-In the options of the LXC, you need to enable the following options:
-
-- `keyctl`: transforms the root actions inside a container to non-root actions on the host machine, making the container "believe" it's root
-
-- `nesting`: allows hardware flags to be passed over virtualization (for docker uses)
-
-- `FUSE`: short for Filesystem for Userspace, it's good for Docker-in-Docker setups for when you need to redirect filesystem calls to a userspace
-
-To convert this into a template, right click the newly created container and click "Convert to template"
-
-#### IMPORTANT NOTE:
-
-Always clone using "Full Clone", never use "Linked Clone"
-
-#### Special Note for Wireguard container
-
-In case you're using this to deploy wireguard, inside your node shell, go to `/etc/pve/lxc/<lxc_id>.conf` and add:
-
-```ini
-lxc.apparmor.profile: unconfined
-lxc.cgroup.device.allow: a
-lxc.cap.drop:
-lxc.cgroup2.devices.allow c 10:200 rwm
-lxc.mount.entry: /dev/net/tun /dev/net/tun none bind, create=file
-```
+- Creating API tokens for automation
