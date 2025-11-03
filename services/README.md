@@ -4,6 +4,17 @@ Just a small disclaimer, when it comes to scripts for Proxmox, 9 times out of 10
 
 ---
 
+### Project Managing/Planner
+
+- Vikunja
+
+- YouTrack
+
+- LeanTime
+
+- Huly
+
+
 Here you'll find every service I've ever deployed (even ones that are unused just for history purposes), with a small `README.md` explaining it's purpose and some useful links for configuration/customization and sources for where I've gotten the information.
 
 Here is a small summary of every service I have:

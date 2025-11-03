@@ -13,3 +13,7 @@ mkdir glance && cd glance && curl -sL https://github.com/glanceapp/docker-compos
 ```
 
 from their [official GitHub page](https://github.com/glanceapp/glance)
+
+## Customization
+
+The whole reason you'd install Glance is how customizable it is. Just one look at the [community widgets](https://github.com/glanceapp/community-widgets) and you see how this launcher really shines.

@@ -10,3 +10,4 @@ Watchtower will automatically pull the latest docker image from docker hub and u
 
 ## Guide
 
+This is a very simple tool to use, you only need to deploy it alongside Portainer, and it will be able to update all the containers that Portainer watches, it's super convenient.

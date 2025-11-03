@@ -1,0 +1,126 @@
+---
+- name: Install Docker in LXC and prepare for template
+  hosts: lxc_container
+  become: yes
+
+  vars:
+    cleanup_ssh_keys: false  # Set to true if you want to regenerate SSH keys per clone
+
+  tasks:
+    - name: Ensure required packages are installed
+      ansible.builtin.apt:
+        name:
+          - ca-certificates
+          - curl
+          - gnupg
+        state: present
+        update_cache: yes
+
+    - name: Detect OS and architecture for Docker
+      ansible.builtin.set_fact:
+        docker_distro: "{{ 'debian' }}"
+        docker_arch: "{{ 'amd64' if ansible_architecture == 'x86_64' else 'arm64' if ansible_architecture == 'aarch64' else ansible_architecture }}"
+
+    - name: Create directory for GPG keyrings
+      ansible.builtin.file:
+        path: /etc/apt/keyrings
+        state: directory
+        mode: '0755'
+
+    - name: Download Docker's official GPG key
+      ansible.builtin.get_url:
+        url: "https://download.docker.com/linux/{{ docker_distro }}/gpg"
+        dest: /etc/apt/keyrings/docker.asc
+        mode: '0644'
+
+    - name: Add Docker repository to Apt sources
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ docker_arch }} signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/{{ docker_distro }} {{ ansible_facts['distribution_release'] }} stable"
+        state: present
+        filename: docker
+
+    - name: Install Docker packages
+      ansible.builtin.apt:
+        name:
+          - docker-ce
+          - docker-ce-cli
+          - containerd.io
+          - docker-buildx-plugin
+          - docker-compose-plugin
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker service is running (for verification)
+      ansible.builtin.service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Verify Docker is installed and running
+      ansible.builtin.command: docker --version
+      register: docker_version_output
+      changed_when: false
+
+    - name: Display Docker version
+      ansible.builtin.debug:
+        var: docker_version_output.stdout
+
+    - name: Test Docker with hello-world
+      ansible.builtin.command: docker run --rm hello-world
+      register: docker_test
+      changed_when: false
+
+    - name: Display Docker test result
+      ansible.builtin.debug:
+        var: docker_test.stdout_lines
+
+    - name: Stop and disable ifupdown-wait-online service
+      service:
+        name:    ifupdown-wait-online
+        enabled: no
+        state:   stopped
+      register: ifupdown_service_result
+      failed_when: "ifupdown_service_result is failed and 'Could not find the requested service' not in ifupdown_service_result.msg"
+
+    - name: Stop Docker service before template creation
+      ansible.builtin.service:
+        name: docker
+        state: stopped
+        enabled: no
+
+    - name: Remove Docker test containers and images
+      ansible.builtin.shell: |
+        docker system prune -af --volumes || true
+      args:
+        executable: /bin/bash
+
+    - name: Clean up APT cache
+      ansible.builtin.apt:
+        autoclean: yes
+        autoremove: yes
+
+    - name: Remove SSH host keys (optional)
+      ansible.builtin.shell: rm -f /etc/ssh/ssh_host_*
+      when: cleanup_ssh_keys | default(false)
+
+    - name: Clean up logs and temporary files
+      ansible.builtin.shell: |
+        # Truncate logs
+        find /var/log -type f -exec truncate -s 0 {} \;
+        rm -rf /var/log/journal/* 2>/dev/null || true
+
+        # Clear temporary files
+        rm -rf /tmp/* 2>/dev/null || true
+        rm -rf /var/tmp/* 2>/dev/null || true
+
+        # Clear bash history
+        rm -f /root/.bash_history
+        find /home -name ".bash_history" -delete 2>/dev/null || true
+
+        # Clear cloud-init if present
+        cloud-init clean --logs --seed 2>/dev/null || true
+
+        # Clear package lists (will be refreshed on first apt update)
+        rm -rf /var/lib/apt/lists/*
+      args:
+        executable: /bin/bash

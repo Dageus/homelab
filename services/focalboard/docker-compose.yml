@@ -1,0 +1,9 @@
+services:
+  focalboard:
+    container_name : focalboard
+    image: mattermost/focalboard
+    restart: unless-stopped
+    ports:
+      - '80:8000'
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"

@@ -1,10 +1,5 @@
 # Docs and Guides
 
-## Useful links
-
-Setuping up XPEnology (cracked version of Synology):
-[https://blog.nootch.net/post/poor-mans-synology-nas-on-proxmox/](https://blog.nootch.net/post/poor-mans-synology-nas-on-proxmox/)
-
 This started as a side project since one of my family members wanted to sell their computer, and I offered to keep it for free if I made it useful.
 
 This then led me down a rabbit hole where I found out I actually have a passion for Systems Administration and DevOps.
