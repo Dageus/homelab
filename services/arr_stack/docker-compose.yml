@@ -1,0 +1,177 @@
+version: "3.8"
+services:
+
+  # =================================================================
+  #                   VPN + qBittorrent
+  # =================================================================
+
+  # gluetun =========================================================
+  gluetun:
+    container_name: gluetun
+    image: ghcr.io/qdm12/gluetun
+    restart: unless-stopped
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8888:8888/tcp # HTTP proxy
+      - 8388:8388/tcp # Shadowsocks
+      - 8388:8388/udp # Shadowsocks
+      - 9696:9696 # Prowlarr Web UI
+      - 8080:8080 # qBittorrent Web UI
+      - 6881:6881 # qBittorrent Torrent Port
+      - 6881:6881/udp
+    environment:
+      - PUID=0
+      - PGID=0
+      # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
+      - VPN_SERVICE_PROVIDER=ivpn
+      - VPN_TYPE=openvpn
+      # OpenVPN:
+      - OPENVPN_USER=
+      - OPENVPN_PASSWORD=
+      # Wireguard:
+      # - WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
+      # - WIREGUARD_ADDRESSES=10.64.222.21/32
+      - TZ=Europe/Lisbon
+      # Server list updater
+      # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list
+      - UPDATER_PERIOD=
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/gluetun:/config
+
+  # qbittorrent =====================================================
+  qbittorrent:
+    container_name: qbittorrent
+    image: ghcr.io/hotio/qbittorrent:latest
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    # ports:
+    #   - 8080:8080 # qBittorrent Web UI
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/qbittorrent:/config
+      - /data/:/data
+
+  # =================================================================
+  #                       *arr stack
+  # =================================================================
+
+  # prowlarr ========================================================
+  prowlarr:
+    container_name: prowlarr
+    hostname: prowlarr.internal
+    image: ghcr.io/hotio/prowlarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    network_mode: "service:gluetun"
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/prowlarr:/config
+
+  # radarr ==========================================================
+  radarr:
+    container_name: radarr
+    hostname: radarr.internal
+    image: ghcr.io/hotio/radarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    ports:
+      - 7878:7878
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/radarr:/config
+      - /data:/data
+
+  # sonarr ==========================================================
+  sonarr:
+    container_name: sonarr
+    hostname: sonarr.internal
+    image: ghcr.io/hotio/sonarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    ports:
+      - 8989:8989
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/sonarr:/config
+      - /data:/data
+
+  # lidarr ==========================================================
+  lidarr:
+    container_name: lidarr
+    hostname: lidarr.internal
+    image: ghcr.io/hotio/lidarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    ports:
+      - 8686:8686
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/lidarr:/config
+      - /data:/data
+
+
+  # readarr =========================================================
+  readarr:
+    container_name: readarr
+    hostname: readarr.internal
+    image: ghcr.io/hotio/readarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    ports:
+      - 8787:8787
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/readarr:/config
+      - /data:/data
+
+  # bazarr ==========================================================
+  bazarr:
+    container_name: bazarr
+    hostname: bazarr.internal
+    image: ghcr.io/hotio/bazarr:latest
+    restart: unless-stopped
+    logging:
+      driver: json-file
+    ports:
+      - 6767:6767
+    environment:
+      - PUID=0
+      - PGID=0
+      - TZ=Europe/Lisbon
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /docker/appdata/bazarr:/config
+      - /data/media:/data/media

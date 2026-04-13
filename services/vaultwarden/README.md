@@ -196,3 +196,13 @@ check the [docker-compose.yml](./docker-compose.yml) example.
 If your application is already live, head on over to your admin page -> SMTP settings and use the values from the user you just created on the settings (the host is "mail.smtp2go.com").
 
 After saving your settings, you can try sending an email to any account you own, if everything goes correctly, you'll have received the email and the setup is ready!
+
+## Panic Password export
+
+If you're like me and eventually switch to a new PVE environment or something goes wrong with your cerificate and you need a way to export your password, the best solution is SSH tunneling into the LXC/VM and export them via the WebUI.
+
+```
+ssh -L 8080:localhost:<VaultwardenPort> user@<VaultwardenIP>
+```
+
+and then open your browser on [localhost:8080](http://localhost:8080).

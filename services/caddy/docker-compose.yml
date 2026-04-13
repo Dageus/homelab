@@ -1,0 +1,16 @@
+services:
+  caddy:
+    build: .
+    container_name: caddy
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - CF_API_TOKEN=your_massive_cloudflare_api_token_here
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data    # Crucial: This saves your certs!
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -2,13 +2,17 @@
 
 Proxmox is extremely good as a baseline for a server, but the amount of logs it saves and how much memory and disk space it uses, given my setup, could hinder the performance of the services I wanted due to how much CPU and disk usage Proxmox would use just by idling.
 
-Here follows a list of the tweaks I made to my Proxmox to enhance performance and make it last longer
+Here follows a list of the tweaks I made to my Proxmox to enhance performance and make it last longer.
 
 #### Sources
 
 [https://forum.proxmox.com/threads/how-does-keyctl-works-in-virtual-environments.116414/](https://forum.proxmox.com/threads/how-does-keyctl-works-in-virtual-environments.116414/)
 
 ## Scripts
+
+### Network tweaks
+
+[https://www.virtualizationhowto.com/2026/03/7-network-settings-i-always-configure-on-a-new-proxmox-server/](https://www.virtualizationhowto.com/2026/03/7-network-settings-i-always-configure-on-a-new-proxmox-server/)
 
 ### How to add internal network interface with NAT
 
@@ -171,7 +175,19 @@ After reboot run the command below to set CPU governor as conservative:
 echo "conservative" | tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 ```
 
-You can use `cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors` to see which governors are available.
+You can use:
+
+```
+cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+```
+
+to check if the governor was changed to the specified, and:
+
+```
+cat /sys/devices/system/cpu/cpu0/cpufreq/scaling_available_governors
+```
+
+to see which governors are available.
 
 This is how it should look on crontab:
 
@@ -180,6 +196,14 @@ This is how it should look on crontab:
 ```
 
 Install i7z using apt so you can check real time CPU frequency and temperatures.
+
+#### Final note on processors
+
+If using an AMD processor, they come with the new Collaborative Processor Performance Control (CPPC), which is even more efficient than the "conservative" governor we talked about previously.
+
+```
+cat /sys/devices/system/cpu/amd_pstate/status
+```
 
 ### NOTE
 
@@ -282,6 +306,12 @@ Then, if you don't want to worry about it at all, you can set a [cronjob](https:
 Download the script from:
 
 [https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install](https://community-scripts.github.io/ProxmoxVE/scripts?id=post-pve-install)
+
+or use the following command:
+
+```
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/community-scripts/ProxmoxVE/main/tools/pve/post-pve-install.sh)"
+```
 
 Say `No` to installing the ceph repository and pvetest repository, since it is extremely unstable.
 
