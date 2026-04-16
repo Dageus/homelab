@@ -22,6 +22,30 @@ During today's age, I do NOT advice going into Torrent swarms or p2p systems wit
 
 My preferred VPN provider is [AirVPN](https://airvpn.org), since they allow port forwarding and are very transparent about allowing p2p transfers and Remote Port Forwarding on their servers
 
+### AirVPN
+
+#### Wireguard Config
+
+After purchasing your AirVPN subscription, you'll want to go to Client Area > Config Generator.
+
+- Choose Linux as your OS
+
+- WireGuard as your protocol
+
+- Choose your preferred country or continent (I chose Europe)
+
+- Scroll down and click Generate
+
+#### Port forwarding
+
+- Go to Client Area > Ports.
+
+- Let it auto-generate a port.
+
+- Copy that port into your gluetun configuration as `FIREWALL_VPN_INPUT_PORTS`
+
+- Copy that port into your settings in qBittorrent (WebUI > Settings > Connection > Port used for incoming connections)
+
 ## My trackers
 
 - TorrentLeech

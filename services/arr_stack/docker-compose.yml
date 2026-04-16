@@ -15,13 +15,14 @@ services:
     devices:
       - /dev/net/tun:/dev/net/tun
     ports:
-      - 8888:8888/tcp # HTTP proxy
-      - 8388:8388/tcp # Shadowsocks
-      - 8388:8388/udp # Shadowsocks
       - 9696:9696 # Prowlarr Web UI
       - 8080:8080 # qBittorrent Web UI
-      - 6881:6881 # qBittorrent Torrent Port
-      - 6881:6881/udp
+      # Don't need to map these anymore
+      # - 8888:8888/tcp # HTTP proxy
+      # - 8388:8388/tcp # Shadowsocks
+      # - 8388:8388/udp # Shadowsocks
+      # - 6881:6881 # qBittorrent Torrent Port
+      # - 6881:6881/udp
     environment:
       - PUID=0
       - PGID=0
@@ -60,6 +61,31 @@ services:
       - /data/:/data
 
   # =================================================================
+  #                           seerr
+  # =================================================================
+  seerr:
+    container_name: seerr
+    hostname: seerr.internal
+    image: ghcr.io/seerr-team/seerr:latest
+    init: true
+    ports:
+      - 5055:5055
+    environment:
+      - LOG_LEVEL=debug
+      - TZ=Europe/Lisbon
+      - PORT=5055 #optional
+    volumes:
+      - /path/to/appdata/config:/app/config
+    healthcheck:
+      test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
+      start_period: 20s
+      timeout: 3s
+      interval: 15s
+      retries: 3
+    restart: unless-stopped
+
+
+  # =================================================================
   #                       *arr stack
   # =================================================================
 
@@ -79,6 +105,17 @@ services:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /docker/appdata/prowlarr:/config
+
+  # flaresolverr (helper for prowlarr) ==============================
+  flaresolverr:
+    container_name: flaresolverr
+    hostname: flaresolverr.internal
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    restart: unless-stopped
+    network_mode: "service:gluetun"
+    environment:
+      - LOG_LEVEL=info
+      - TZ=Europe/Lisbon
 
   # radarr ==========================================================
   radarr:

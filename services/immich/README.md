@@ -8,11 +8,11 @@ Immich is an open-source image library that has incredibly useful features, on p
 
 [https://pve.proxmox.com/wiki/Linux_Container#_bind_mount_points](https://pve.proxmox.com/wiki/Linux_Container#_bind_mount_points)
 
-## Repo
+### Repo
 
 [https://github.com/immich-app/immich](https://github.com/immich-app/immich)
 
-## Guide
+### Guide
 
 BEFORE STARTING TO INSTALL IMMICH, IT'S BETTER TO HAVE A [NAS](https://en.wikipedia.org/wiki/Network-attached_storage) SET UP.
 

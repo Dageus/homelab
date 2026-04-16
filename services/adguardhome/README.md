@@ -2,9 +2,13 @@
 
 AdGuard Home is a self-hosted DNS server + AdBlocker with a friendly UI.
 
-## Repo
+### Repo
 
 [https://github.com/AdguardTeam/AdGuardHome](https://github.com/AdguardTeam/AdGuardHome)
+
+### Website
+
+[https://adguard.com/en/adguard-home/overview.html](https://adguard.com/en/adguard-home/overview.html)
 
 ## Guide
 

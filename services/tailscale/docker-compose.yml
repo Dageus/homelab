@@ -7,11 +7,15 @@ services:
     environment:
       - TS_AUTHKEY=<your_auth_key>
       - TS_ROUTES=192.168.1.0/24
-      - TS_HOSTNAME=homelab
-      - TS_EXTRA_ARGS=--advertise-exit-node
+      - TS_HOSTNAME=adguard-dns
+      - TS_EXTRA_ARGS=--advertise-exit-node --advertise-tags=tag:container
       - TS_STATE_DIR=/var/lib/tailscale
-
+      - TS_USERSPACE=false
     cap_add:
+      # these were on the example config
+      - net_admin
+      - net_raw
+      # these are mine
       - NET_ADMIN
       - SYS_MODULE
     volumes:

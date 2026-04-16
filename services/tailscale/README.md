@@ -6,12 +6,30 @@ For improved security it's recommended to run wireguard on it's own, because Tai
 
 For this case, I created an auth key in the Keys section on the Tailscale admin panel, added the tag container to it (you need to alter the access JSON file to create tags)
 
-and then used the docker compose here to deploy it inside an LXC.
+And then used the docker compose here to deploy it inside an LXC.
 
-## Repo
+### Repo
 
 [https://github.com/tailscale/tailscale](https://github.com/tailscale/tailscale)
 
+### Website
+
+[https://tailscale.com/](https://tailscale.com/)
+
 ## Guide
 
+[TODO:] #
 
+### Auth Key for Docker
+
+To generate an auth key, go to the `Keys` section of the admin console.
+
+- Click on `Generate auth key...`
+
+- Give it a description
+
+- Leave `Reusable` off (so there's no chance of using it twice)
+
+- Copy the key. It only shows it __ONCE__
+
+- Inject it in the `TS_AUTHKEY` environment variable of the container

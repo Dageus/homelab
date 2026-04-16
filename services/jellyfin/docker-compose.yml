@@ -14,10 +14,10 @@ services:
       - /docker/appdata/jellyfin:/config
       - /data/media:/data/media:ro
       # Optional - extra fonts to be used during transcoding with subtitle burn-in
-      - type: bind
-        source: /path/to/fonts
-        target: /usr/local/share/fonts/custom
-        read_only: true
+      # - type: bind
+      #   source: /path/to/fonts
+      #   target: /usr/local/share/fonts/custom
+      #   read_only: true
     devices:
       # GPU passthrough
       - /dev/dri:/dev/dri

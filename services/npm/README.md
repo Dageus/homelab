@@ -14,9 +14,13 @@ In this case, I used my homelab tailscale node as a subnet router to my home net
 
 This provided an easy way for non tech-savvy people (a.k.a. my family) to access our home NAS.
 
-## Repo
+### Repo
 
 [https://github.com/NginxProxyManager/nginx-proxy-manager](https://github.com/NginxProxyManager/nginx-proxy-manager)
+
+### Website
+
+[https://nginxproxymanager.com/](https://nginxproxymanager.com/)
 
 ### Link for Certificate Renewal
 

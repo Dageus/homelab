@@ -1,12 +1,21 @@
 # Watchtower
 
+> [!NOTE]
+> Watchtower is officially unmaintained; I still haven't found an alternative.
+>
+> [wud](https://github.com/getwud/wud) seems like a good alternative
+
 Watchtower is an extremely useful service to automatically update running docker application.
 
 Watchtower will automatically pull the latest docker image from docker hub and update the container.
 
-## Repo
+### Repo
 
 [https://github.com/containrrr/watchtower](https://github.com/containrrr/watchtower)
+
+### Website
+
+N/A
 
 ## Guide
 

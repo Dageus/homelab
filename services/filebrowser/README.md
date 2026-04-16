@@ -2,11 +2,11 @@
 
 A simple WebUI File Explorer
 
-## Repo
+### Repo
 
 [https://github.com/filebrowser/filebrowser](https://github.com/filebrowser/filebrowser)
 
-## Website
+### Website
 
 [https://filebrowser.org/](https://filebrowser.org/)
 

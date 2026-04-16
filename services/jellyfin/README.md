@@ -1,11 +1,15 @@
 # Jellyfin
 
+Jellyfin is the Free Software Media System - Server Backend & API
 
-
-## Website
+### Website
 
 [https://jellyfin.org/](https://jellyfin.org/)
 
-## Repo
+### Repo
 
 [https://github.com/jellyfin/jellyfin](https://github.com/jellyfin/jellyfin)
+
+## Guide
+
+[TODO:] #

@@ -4,11 +4,11 @@ Vikunja is a project-manager software that has Kan-Ban boards and other useful f
 
 I used to use it to organize my work.
 
-## Repo
+### Repo
 
 [https://github.com/go-vikunja/vikunja](https://github.com/go-vikunja/vikunja)
 
-## Website
+### Website
 
 [https://vikunja.io/](https://vikunja.io/)
 

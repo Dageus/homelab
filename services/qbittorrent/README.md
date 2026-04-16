@@ -10,7 +10,14 @@ For additionaly security (it's needed, trust me), we're going to tunnel Qbittorr
 
 Our VPN tunnel will be used through gluetun.
 
-## Repo
+### Repo
+
+[https://github.com/qbittorrent/qBittorrent](https://github.com/qbittorrent/qBittorrent)
+
+### Website
+
+[https://www.qbittorrent.org/](https://www.qbittorrent.org/)
 
 ## Guide
 
+I host it as a docker image using [hotio's image](https://hotio.dev/containers/qbittorrent/) to serve my [*arr stack](../arr_stack/README.md).

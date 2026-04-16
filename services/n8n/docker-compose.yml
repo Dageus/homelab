@@ -1,0 +1,37 @@
+services:
+  n8n:
+    image: docker.n8n.io/n8nio/n8n
+    container_name: n8n
+    restart: 'unless-stopped'
+    environment:
+      # Fixes cron triggers and timestamps
+      - GENERIC_TIMEZONE=Europe/Lisbon
+      - TZ=Europe/Lisbon
+      # Tells n8n to use the Postgres container below
+      - DB_TYPE=postgresdb
+      - DB_POSTGRESDB_HOST=postgres
+      - DB_POSTGRESDB_PORT=5432
+      - DB_POSTGRESDB_DATABASE=n8n
+      - DB_POSTGRESDB_USER=n8n
+      - DB_POSTGRESDB_PASSWORD=change_this_password
+      # Optional: Set this if you eventually put n8n behind a domain name
+      # - WEBHOOK_URL=https://n8n.yourdomain.com
+    ports:
+      - 5678:5678
+    volumes:
+      - n8n_data:/home/node/.n8n
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: n8n_postgres
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER=n8n
+      - POSTGRES_PASSWORD=change_this_password
+      - POSTGRES_DB=n8n
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  n8n_data:
+  postgres_data:

@@ -4,11 +4,11 @@ Focalboard is a minimal, lightweight project management software mimicking [Trel
 
 This was my next option for my To-Do's after my not-so nice experience using [Vikunja](../vikunja/README.md).
 
-## Repo
+### Repo
 
 [https://github.com/mattermost-community/focalboard](https://github.com/mattermost-community/focalboard)
 
-## Website
+### Website
 
 [https://www.focalboard.com/](https://www.focalboard.com/)
 
