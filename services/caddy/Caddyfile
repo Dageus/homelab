@@ -1,0 +1,4 @@
+{
+    email jomouzio@gmail.com
+}
+import /etc/caddy/conf.d/*.conf

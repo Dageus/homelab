@@ -1,21 +1,24 @@
 services:
   caddy:
-    image: caddy:latest
+    image: ghcr.io/caddybuilds/caddy-cloudflare:latest
     container_name: caddy
     restart: unless-stopped
-    network_mode: host
+    cap_add:
+      - NET_ADMIN
     ports:
       - 80:80
       - 443:443
       - 443:443/udp
     environment:
-      - CF_API_TOKEN=your_massive_cloudflare_api_token_here
+      - CLOUDFLARE_API_TOKEN=${CF_API_TOKEN}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
-      - ./site:/srv
+      - ./conf.d:/etc/caddy/conf.d
       - caddy_data:/data
       - caddy_config:/config
 
 volumes:
   caddy_data:
+    # NOTE: I don't need this
+    # external: true
   caddy_config:

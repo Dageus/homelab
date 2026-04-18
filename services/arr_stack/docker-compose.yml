@@ -27,14 +27,14 @@ services:
       - PUID=0
       - PGID=0
       # See https://github.com/qdm12/gluetun-wiki/tree/main/setup#setup
-      - VPN_SERVICE_PROVIDER=ivpn
-      - VPN_TYPE=openvpn
-      # OpenVPN:
-      - OPENVPN_USER=
-      - OPENVPN_PASSWORD=
-      # Wireguard:
-      # - WIREGUARD_PRIVATE_KEY=wOEI9rqqbDwnN8/Bpp22sVz48T71vJ4fYmFWujulwUU=
-      # - WIREGUARD_ADDRESSES=10.64.222.21/32
+      - VPN_SERVICE_PROVIDER=airvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY=CJMzLQon5i8SiCsDOzn9SiJ/t7bpC6xSrPHZC0pToF8=
+      - WIREGUARD_PRESHARED_KEY=SeDVVrgLdlMOSe0VUhqhCYRsNCpXy1yPaWEOuy5yLb4=
+      - WIREGUARD_ADDRESSES=10.187.94.226/32
+      - FIREWALL_VPN_INPUT_PORTS=33433
+      - SERVER_COUNTRIES=Netherlands
+      # Timezone
       - TZ=Europe/Lisbon
       # Server list updater
       # See https://github.com/qdm12/gluetun-wiki/blob/main/setup/servers.md#update-the-vpn-servers-list

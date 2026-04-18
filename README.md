@@ -16,7 +16,7 @@
 
 ## Automation
 
-Currently, my entire Proxmox setup is automated using Ansible, Terraform, GitHub Actions and more. If you want to check it out, see my [proxmox_automation]() repo.
+Currently, my entire Proxmox setup is automated using Ansible, Terraform, GitHub Actions and more. If you want to check it out, see my [proxmox_automation](https://github.com/Dageus/proxmox_automation/) repo.
 
 ## Disclaimer
 

@@ -11,4 +11,3 @@ services:
       - '8000:80'
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
-
