@@ -1,8 +1,0 @@
-lxcs:
-  hosts:
-    npm:
-      ansible_host: 192.168.1.204
-    adguard:
-      ansible_host: 192.168.1.206
-    portainer:
-      ansible_host: 192.168.1.202

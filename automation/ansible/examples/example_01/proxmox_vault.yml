@@ -1,3 +1,0 @@
-proxmox_api_user: "user@pam"
-proxmox_api_id: "ansible"
-proxmox_api_secret: "your-token-secret"
