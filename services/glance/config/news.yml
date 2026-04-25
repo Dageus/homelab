@@ -1,0 +1,81 @@
+- name: News
+  columns:
+    - size: small
+      widgets:
+        - type: markets
+          title: Indexes
+          markets:
+            - symbol: SPY
+              name: S&P 500
+            - symbol: DOW
+              name: Dow Jones
+            - symbol: NASDAQ
+              name: NASDAQ 100
+
+        - type: markets
+          title: Crypto
+          markets:
+            - symbol: BTC-USD
+              name: Bitcoin
+            - symbol: ETH-USD
+              name: Ethereum
+
+        - type: markets
+          title: Stocks
+          markets:
+            - symbol: NVDA
+              name: NVIDIA
+            - symbol: MSFT
+              name: Microsoft
+            - symbol: MSFT
+              name: Microsoft
+            - symbol: MSFT
+              name: Microsoft
+            - symbol: MSFT
+              name: Microsoft
+            - symbol: MSFT
+              name: Microsoft
+
+    - size: full
+      widgets:
+        - type: rss
+          title: News
+          style: horizontal-cards
+          feeds:
+            - url: https://feeds.bloomberg.com/markets/news.rss
+              title: Bloomberg
+            - url: https://www.ft.com/technology?format=rss
+              title: Financial Times
+
+        - type: custom-api
+          title: Steam Specials
+          cache: 12h
+          url: https://store.steampowered.com/api/featuredcategories?cc=us
+          template: |
+            <ul class="list list-gap-10 collapsible-container" data-collapse-after="5">
+            {{ range .JSON.Array "specials.items" }}
+              <li>
+                <a class="size-h4 color-highlight block text-truncate" href="https://store.steampowered.com/app/{{ .Int "id" }}/">{{ .String "name" }}</a>
+                <ul class="list-horizontal-text">
+                  <li>{{ div (.Int "final_price" | toFloat) 100 | printf "$%.2f" }}</li>
+                  {{ $discount := .Int "discount_percent" }}
+                  <li{{ if ge $discount 40 }} class="color-positive"{{ end }}>{{ $discount }}% off</li>
+                </ul>
+              </li>
+            {{ end }}
+            </ul>
+
+    # ==========================================
+    # COLUMN 3: Feeds, Finance, and Releases
+    # ==========================================
+    - size: small
+      widgets:
+        - type: rss
+          limit: 10
+          collapse-after: 5
+          cache: 4h
+          feeds:
+            - url: https://fitgirl-repacks.site/feed/
+              title: FitGirl Repacks
+            - url: https://selfh.st/rss/
+              title: selfh.st

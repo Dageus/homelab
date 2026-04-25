@@ -10,6 +10,9 @@
 
 ## Guide
 
+> [!NOTE]
+> I use Caddy alongside CrowdSec for ease of use and security
+
 For a functional Caddy proxy, you need 2 things:
 
 - an email
@@ -84,3 +87,14 @@ Access you Cloudflare Dashboard, then:
 
 - Copy the API Token to your clipboard (**DO NOT LOSE IT, OTHERWISE YOU NEED TO REPEAT THE WHOLE PROCESS**)
 
+### CrowdSec
+
+For a more secure experience, you can add [CrowdSec](https://github.com/crowdsecurity/crowdsec).
+
+Caddy has a plugin for it (my Docker image already builds with it).
+
+### Identity Providers
+
+If you're using an IdP like [Authentik](https://github.com/goauthentik/authentik), [Authelia](https://github.com/authelia/authelia) or [Keycloak](https://github.com/keycloak/keycloak), you'll need to configure Caddy to "use" them.
+
+Most of it involves copying the headers from the IdP (if an app support OIDC/SAML) or just proxying it through the IdP otherwise.

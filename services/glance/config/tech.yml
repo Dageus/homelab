@@ -1,0 +1,64 @@
+- name: Tech
+  columns:
+    - size: small
+      widgets:
+        - type: calendar
+          first-day-of-week: monday
+        - type: weather
+          location: Lisbon, Portugal
+          units: metric
+          hour-format: 24h
+          show-area-name: true
+
+    - size: full
+      widgets:
+        - type: group
+          widgets:
+            - type: hacker-news
+              limit: 10
+            - type: lobsters
+              limit: 10
+
+        - type: videos
+          channels:
+            - UCsBjURrPoezykLs9EqgamOA # Fireship
+            - UCl2mFZoRqjw_ELax4Yisf6w # Louis Rossman
+            - UChIs72whgZI9w6d6FhwGGHA # Gamers Nexus
+            - UCAwT-7B6StW_xzXPku6v7MQ # Mo Bitar
+            - UC6biysICWOJ-C3P4Tyeggzg # Low Level Learning
+            - UC9x0AN7BWHpCDHSm9NiJFJQ # Network Chuck
+
+        - type: group
+          widgets:
+            - type: reddit
+              subreddit: technology
+              show-thumbnails: true
+            - type: reddit
+              subreddit: selfhosted
+              show-thumbnails: true
+            - type: reddit
+              subreddit: golang
+              show-thumbnails: true
+            - type: reddit
+              subreddit: niri
+              show-thumbnails: true
+
+    - size: small
+      widgets:
+        - type: rss
+          limit: 10
+          collapse-after: 5
+          cache: 4h
+          feeds:
+            - url: https://fitgirl-repacks.site/feed/
+              title: FitGirl Repacks
+            - url: https://selfh.st/rss/
+              title: selfh.st
+
+        - type: releases
+          cache: 12h
+          repositories:
+            - glanceapp/glance
+            - ansible/ansible
+            - immich-app/immich
+            - syncthing/syncthing

@@ -1,9 +1,9 @@
 services:
   db:
-    image: postgres:alpine
+    image: postgres:17-alpine
     restart: always
     volumes:
-      - db:/var/lib/postgresql/data:Z
+      - db:/var/lib/postgresql
     env_file:
       - db.env
 
@@ -16,7 +16,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - /nextcloud_data:/var/www/html/data:z
+      - /nextcloud_data:/var/www/html/data
     environment:
       - POSTGRES_HOST=db
       - REDIS_HOST=redis
@@ -42,7 +42,7 @@ services:
     restart: always
     volumes:
       - nextcloud:/var/www/html
-      - /nextcloud_data:/var/www/html/data:z
+      - /nextcloud_data:/var/www/html/data
     entrypoint: /cron.sh
     depends_on:
       - db

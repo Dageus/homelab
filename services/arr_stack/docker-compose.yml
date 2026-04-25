@@ -1,4 +1,3 @@
-version: "3.8"
 services:
 
   # =================================================================
@@ -8,6 +7,7 @@ services:
   # gluetun =========================================================
   gluetun:
     container_name: gluetun
+    hostname: gluetun.internal
     image: ghcr.io/qdm12/gluetun
     restart: unless-stopped
     cap_add:
@@ -60,6 +60,18 @@ services:
       - /docker/appdata/qbittorrent:/config
       - /data/:/data
 
+  # autobrr =========================================================
+  autobrr:
+    container_name: autobrr
+    image: ghcr.io/autobrr/autobrr:latest
+    restart: unless-stopped
+    environment:
+      - TZ=Europe/Lisbon
+    volumes:
+      - ./autobrr/config:/config
+    ports:
+      - 7474:7474
+
   # =================================================================
   #                           seerr
   # =================================================================
@@ -75,7 +87,7 @@ services:
       - TZ=Europe/Lisbon
       - PORT=5055 #optional
     volumes:
-      - /path/to/appdata/config:/app/config
+      - ./seerr/config:/app/config
     healthcheck:
       test: wget --no-verbose --tries=1 --spider http://localhost:5055/api/v1/settings/public || exit 1
       start_period: 20s
@@ -92,7 +104,6 @@ services:
   # prowlarr ========================================================
   prowlarr:
     container_name: prowlarr
-    hostname: prowlarr.internal
     image: ghcr.io/hotio/prowlarr:latest
     restart: unless-stopped
     logging:
@@ -109,7 +120,6 @@ services:
   # flaresolverr (helper for prowlarr) ==============================
   flaresolverr:
     container_name: flaresolverr
-    hostname: flaresolverr.internal
     image: ghcr.io/flaresolverr/flaresolverr:latest
     restart: unless-stopped
     network_mode: "service:gluetun"
@@ -176,23 +186,24 @@ services:
 
 
   # readarr =========================================================
-  readarr:
-    container_name: readarr
-    hostname: readarr.internal
-    image: ghcr.io/hotio/readarr:latest
-    restart: unless-stopped
-    logging:
-      driver: json-file
-    ports:
-      - 8787:8787
-    environment:
-      - PUID=0
-      - PGID=0
-      - TZ=Europe/Lisbon
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /docker/appdata/readarr:/config
-      - /data:/data
+  # WARNING: need to find a replacement
+  # readarr:
+  #   container_name: readarr
+  #   hostname: readarr.internal
+  #   image: ghcr.io/hotio/readarr:latest
+  #   restart: unless-stopped
+  #   logging:
+  #     driver: json-file
+  #   ports:
+  #     - 8787:8787
+  #   environment:
+  #     - PUID=0
+  #     - PGID=0
+  #     - TZ=Europe/Lisbon
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - /docker/appdata/readarr:/config
+  #     - /data:/data
 
   # bazarr ==========================================================
   bazarr:

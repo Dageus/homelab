@@ -46,6 +46,110 @@ After purchasing your AirVPN subscription, you'll want to go to Client Area > Co
 
 - Copy that port into your settings in qBittorrent (WebUI > Settings > Connection > Port used for incoming connections)
 
+## Adding qBittorrent as a Download client
+
+- Settings > Download Clients
+
+- Torrents > qBittorrent
+
+- If using the gluetun network, leave it as `localhost:8080`, else use the container name (`qbittorrent`) or the vpn container name (`gluetun`).
+
+## Prowlarr
+
+### Adding Flaresolverr as an Indexer Proxy
+
+- Go to Settings > Indexers.
+
+- There's a `+` to add an Indexer Proxy.
+
+- Select Flaresolverr
+
+- Add the "flaresolverr" tag
+
+- If Flaresolverr is using your gluetun network, leave it as `http://localhost:8191`, otherwise use the defined hostname.
+
+### Adding Apps
+
+Do this for all apps (radarr, sonarr, lidarr, etc.)
+
+In the App:
+
+- Settings > General
+
+- Copy the API key
+
+In Prowlarr:
+
+- Settings > Apps
+
+- Add a new App
+
+- Set the API key of the app
+
+- Use the container name as the server name for the app
+
+- If using VPN, set Prowlarr server to `gluetun`, otherwise use `prowlarr`
+
+- Test the connection
+
+## qBittorrent
+
+The default use is `admin`.
+
+To see the generated password, log into the LXC and run:
+
+```
+docker logs qbittorrent
+```
+
+It should be near the tail of the logs.
+
+### Tweaks
+
+- Default torrent management mode: `Automatic`
+
+- Uncheck `Use UPnP / NAT-PMP port forwarding from my router`
+
+- Disable `DHT`, `PeX` and `Local Peer Discovery`
+
+- Network interface: `tun0`
+
+- Disk cache: `1024MiB`
+
+- Asynchronous I/O threads: 
+
+## Seerr
+
+- Add your jellyfin's URL or IP
+
+- Set your jellyfin username and password
+
+- Set a valid email address
+
+- If seerr is behind a reverse proxy, don't set a base URL
+
+- Sync your Jellyfin libraries (if there are no libraries Seerr will get stuck)
+
+### Adding media
+
+Add your sonarr and radarr servers to Seerr so it can request movies.
+
+## Pipeline
+
+1. You request a movie via Seerr
+
+2. Seerr requests to movie to radarr/sonarr
+
+3. radarr/sonarr requests the movie to prowlar
+
+4. prowlarr goes through your trackers and finds a magnet/torrent link
+
+5. passes it back to radarr/sonarr
+
+6. radarr/sonarr schedule the media to qbittorrent
+
+## Library
+
 ## My trackers
 
 - TorrentLeech
@@ -59,6 +163,16 @@ After purchasing your AirVPN subscription, you'll want to go to Client Area > Co
 ### For the future
 
 - FileCoin
+
+### Improving ratio in private trackers
+
+You cans see in my docker-compose that I have [autobrr](https://github.com/autobrr/autobrr) in there.
+
+It's an extremely fast download automation tools that allows me to be one of the first few to see when FREELEECH are announced.
+
+Configure your Indexers in the settings, and connect your qBittorrent client.
+
+Then create a filter for FREELEECH that triggers an action in qBittorrent and you're good to go.
 
 ## Hosting
 

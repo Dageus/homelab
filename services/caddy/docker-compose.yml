@@ -1,6 +1,9 @@
 services:
   caddy:
-    image: ghcr.io/caddybuilds/caddy-cloudflare:latest
+    build:
+      context: ./
+      target: caddy
+      network: host
     container_name: caddy
     restart: unless-stopped
     cap_add:
@@ -11,14 +14,43 @@ services:
       - 443:443/udp
     environment:
       - CLOUDFLARE_API_TOKEN=${CF_API_TOKEN}
+      - CROWDSEC_API_KEY=${CROWDSEC_API_KEY}
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - ./conf.d:/etc/caddy/conf.d
-      - caddy_data:/data
-      - caddy_config:/config
+      - caddy-data:/data
+      - caddy-config:/config
+      - caddy-logs:/var/log/caddy
+    networks:
+      crowdsec:
+    security_opt:
+      - no-new-privileges=true
+
+  crowdsec:
+    image: docker.io/crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    environment:
+      - GID=1000
+      - COLLECTIONS=crowdsecurity/caddy crowdsecurity/http-cve crowdsecurity/whitelist-good-actors
+      - BOUNCER_KEY_CADDY=${CROWDSEC_API_KEY}
+      - ENROLL_KEY=${CROWDSEC_ENROLLMENT_KEY}
+      - ENROLL_INSTANCE_NAME=proxmox
+    volumes:
+      - crowdsec-db:/var/lib/crowdsec/data/
+      - ./acquis.yaml:/etc/crowdsec/acquis.yaml
+      - caddy-logs:/var/log/caddy:ro
+    networks:
+      crowdsec:
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges=true
 
 volumes:
-  caddy_data:
-    # NOTE: I don't need this
-    # external: true
-  caddy_config:
+  crowdsec-db:
+  caddy-logs:
+  caddy-data:
+  caddy-config:
+
+networks:
+  crowdsec:
+    driver: bridge

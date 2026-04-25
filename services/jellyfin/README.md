@@ -12,4 +12,10 @@ Jellyfin is the Free Software Media System - Server Backend & API
 
 ## Guide
 
-[TODO:] #
+### Adding libraries
+
+- Go to Dashboard > Libaries.
+
+- Add your Movies library (folder: `/media/movies`)
+
+- Add your TV Shows library (folder: `/media/tv`)
