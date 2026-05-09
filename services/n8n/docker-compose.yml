@@ -14,8 +14,12 @@ services:
       - DB_POSTGRESDB_DATABASE=n8n
       - DB_POSTGRESDB_USER=n8n
       - DB_POSTGRESDB_PASSWORD=change_this_password
-      # Optional: Set this if you eventually put n8n behind a domain name
-      # - WEBHOOK_URL=https://n8n.yourdomain.com
+      # optimizations
+      - DB_POSTGRESDB_VACUUM_ON_STARTUP=true
+      - EXECUTIONS_DATA_SAVE_ON_SUCCESS=none
+      - EXECUTIONS_DATA_PRUNE=true
+      - EXECUTIONS_DATA_MAX_AGE=72
+      - WEBHOOK_URL=${URL}
     ports:
       - 5678:5678
     volumes:

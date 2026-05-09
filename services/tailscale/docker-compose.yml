@@ -5,7 +5,7 @@ services:
     restart: unless-stopped
     network_mode: host
     environment:
-      - TS_AUTHKEY=<your_auth_key>
+      - TS_AUTHKEY=${AUTH_KEY}
       - TS_ROUTES=192.168.1.0/24
       - TS_HOSTNAME=adguard-dns
       - TS_EXTRA_ARGS=--advertise-exit-node --advertise-tags=tag:container

@@ -3,7 +3,7 @@ services:
     build:
       context: ./
       target: caddy
-      network: host
+      # network: host
     container_name: caddy
     restart: unless-stopped
     cap_add:

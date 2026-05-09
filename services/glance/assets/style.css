@@ -44,7 +44,7 @@ body {
   content: "";
   display: inline-block;
   height: 5px;
-  background: #363646; /* Kanagawa Sumi Ink 3 */
+  background: #171717;
   flex-grow: 1;
   margin-left: 5px;
 }
@@ -53,12 +53,11 @@ body {
   padding-right: 0px;
 }
 
-/* Widget Backgrounds (Using Kanagawa Sumi Ink instead of pure black) */
 .widget-content:not(.widget-content-frameless),
 .widget-content-frame {
   background: rgba(31, 31, 40, 0.85); /* Kanagawa Sumi Ink 1 with opacity */
   box-shadow: 0px 4px 15px 0px rgba(0, 0, 0, 0.4);
-  border: 1px solid #2A2A37; /* Subtle border definition */
+  border: 1px solid #2A2A37;
 }
 
 /* Expand Toggles */
@@ -90,39 +89,6 @@ li.flex.items-center.gap-10 {
   place-items: center;
 }
 
-/* li.flex a.bookmarks-link { */
-/*   position: absolute; */
-/*   top: 0; */
-/*   left: 0; */
-/*   width: 100%; */
-/*   height: 100%; */
-/*   z-index: 1; */
-/*   display: flex; */
-/*   align-items: center; */
-/*   justify-content: flex-start; */
-/*   flex-direction: column-reverse; */
-/* } */
-/**/
-/* li.flex .bookmarks-icon-container img { */
-/*   transition: transform 0.2s ease; */
-/* } */
-/**/
-/* li.flex:hover .bookmarks-icon-container img { */
-/*   transform: scale(1.2); */
-/* } */
-/**/
-/* .bookmarks-group .list.list-gap-2 li:nth-child(2n+3) { */
-/*   margin-top: 1rem; */
-/* } */
-/**/
-/* .bookmarks-icon { */
-/*   opacity: 1; */
-/* } */
-/**/
-/* .bookmarks-icon-container { */
-/*   margin-bottom: 2rem; */
-/* } */
-
 .items-center {
   transition: all 200ms ease;
 }
@@ -139,7 +105,7 @@ li.flex.items-center.gap-10 {
 }
 
 /* ==========================================================================
-   MEDIA QUERIES 
+   MEDIA QUERIES
    ========================================================================== */
 
 @media (max-width: 650px) {
